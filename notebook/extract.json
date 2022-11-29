@@ -1,0 +1,108 @@
+{
+	"name": "extract",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "extractPool",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"runAsWorkspaceSystemIdentity": false,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "466bd37c-9b2d-46ed-8e0c-f50ad27303eb"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1"
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/07faaabe-4769-4e2d-9599-68cf7da34d88/resourceGroups/test-synapse-resurce-group/providers/Microsoft.Synapse/workspaces/cata-synapse/bigDataPools/extractPool",
+				"name": "extractPool",
+				"type": "Spark",
+				"endpoint": "https://cata-synapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/extractPool",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net",
+					"authHeader": null
+				},
+				"sparkVersion": "3.2",
+				"nodeCount": 10,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"print('test from spark')\r\n",
+					"data = [('James','','Smith','1991-04-01','M',3000),\r\n",
+					"  ('Michael','Rose','','2000-05-19','M',4000),\r\n",
+					"  ('Robert','','Williams','1978-09-05','M',4000),\r\n",
+					"  ('Maria','Anne','Jones','1967-12-01','F',4000),\r\n",
+					"  ('Jen','Mary','Brown','1980-02-17','F',-1)\r\n",
+					"]\r\n",
+					"\r\n",
+					"columns = [\"firstname\",\"middlename\",\"lastname\",\"dob\",\"gender\",\"salary\"]\r\n",
+					"df = spark.createDataFrame(data=data, schema=columns)\r\n",
+					"\r\n",
+					"print('print schema')\r\n",
+					"df.printSchema()\r\n",
+					"\r\n",
+					"print('print dataframe')\r\n",
+					"df.show()\r\n",
+					"\r\n",
+					"df.createOrReplaceTempView(\"PERSON_DATA\")\r\n",
+					"df2 = spark.sql(\"SELECT * from PERSON_DATA\")\r\n",
+					"#df2.printSchema()\r\n",
+					"#df2.show()\r\n",
+					"\r\n",
+					"groupDF = spark.sql(\"SELECT gender, count(*) from PERSON_DATA group by 1\")\r\n",
+					"groupDF.show()"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"df = spark.read.csv(\"/tmp/resources/buiding.csv\")\r\n",
+					"df.printSchema()\r\n",
+					""
+				]
+			}
+		]
+	}
+}
